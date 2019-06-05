@@ -1,5 +1,6 @@
 # gin-rest-template
 
+> 基于github.com\PedroGao\jerry项目二次开发
 > 一个使用gin开发restful api应用的模板
 
 ## 代理
