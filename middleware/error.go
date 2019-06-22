@@ -3,6 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/zgltao/jerry/libs/erro"
+	"github.com/zgltao/jerry/libs/logging"
 	lv "github.com/zgltao/jerry/libs/validator"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
@@ -16,6 +17,7 @@ func ErrorHandler(c *gin.Context) {
 	length := len(c.Errors)
 	if length > 0 {
 		e := c.Errors[length-1]
+		logging.Warn("全局日志:", e)
 		switch e1 := e.Err.(type) {
 		case *erro.HttpErr:
 			writeHttpError(c, *e1)

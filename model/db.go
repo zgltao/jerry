@@ -46,6 +46,7 @@ func InitLocal() *xorm.Engine {
 
 func Init() {
 	DB = InitLocal()
+	DB.ShowSQL(true)
 }
 
 func Sync() {

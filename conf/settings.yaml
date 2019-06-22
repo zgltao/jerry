@@ -1,5 +1,5 @@
 runmode: debug
-addr: :3003
+addr: :3000
 name: jerry
 
 # token secret
@@ -14,3 +14,12 @@ db:
   password: 123456
 
 oracle_config: scott/tiger@127.0.0.1:1521/ORCL
+
+app:
+  runtime_root_path: runtime/
+
+log:
+  save_path: logs/
+  save_ame: log
+  file_ext: log
+  time_format: 20060102

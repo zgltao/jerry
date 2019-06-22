@@ -8,12 +8,15 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/zgltao/jerry/config"
+	"github.com/zgltao/jerry/libs/logging"
 	"github.com/zgltao/jerry/libs/token"
 	lv "github.com/zgltao/jerry/libs/validator"
 	"github.com/zgltao/jerry/model"
 	"github.com/zgltao/jerry/router"
 	"net/http"
 	"time"
+
+	"github.com/robfig/cron"
 )
 
 var (
@@ -29,6 +32,8 @@ func main() {
 		log.Fatalf("read config file error : %s  \n", err)
 	}
 
+	//init logging
+	logging.Setup()
 	// init db
 	model.Init()
 	//自动根据模型创建表
@@ -62,10 +67,14 @@ func main() {
 			log.Fatalf("The router has no response, or it might took too long to start up. erro: %s \n", err)
 		}
 		log.Infoln("The app has been deployed successfully.")
+
+		//启动定时器cron
+		cron_init()
 	}()
 
 	// run
 	log.Fatalln(app.Run(viper.GetString("addr")))
+
 }
 
 // check app self when start
@@ -82,4 +91,29 @@ func ping() error {
 		time.Sleep(time.Second)
 	}
 	return errors.New("app is not working")
+}
+
+func cron_init() error {
+	log.Println("Starting...")
+
+	c := cron.New()
+	c.AddFunc("* * * * * *", func() {
+		log.Println("Run models.CleanAllTag...")
+		logging.Info("Run models.CleanAllTag...")
+		//models.CleanAllTag()
+	})
+	c.AddFunc("* * * * * *", func() {
+		log.Println("Run models.CleanAllArticle...")
+		//models.CleanAllArticle()
+	})
+
+	c.Start()
+
+	t1 := time.NewTimer(time.Second * 100)
+	for {
+		select {
+		case <-t1.C:
+			t1.Reset(time.Second * 100)
+		}
+	}
 }
