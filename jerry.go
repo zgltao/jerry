@@ -36,9 +36,10 @@ func main() {
 	logging.Setup()
 	// init db
 	model.Init()
+
 	//自动根据模型创建表
 	//model.Sync()
-	defer model.Close()
+	//defer model.Close()
 
 	// jwt
 	token.New()
@@ -69,7 +70,7 @@ func main() {
 		log.Infoln("The app has been deployed successfully.")
 
 		//启动定时器cron
-		cron_init()
+		//cron_init()
 	}()
 
 	// run
@@ -97,13 +98,19 @@ func cron_init() error {
 	log.Println("Starting...")
 
 	c := cron.New()
-	c.AddFunc("* * * * * *", func() {
-		log.Println("Run models.CleanAllTag...")
-		logging.Info("Run models.CleanAllTag...")
+	c.AddFunc("0 * * * * *", func() {
+		log.Println("每分钟运行一次")
+		logging.Info("每分钟运行一次")
 		//models.CleanAllTag()
 	})
-	c.AddFunc("* * * * * *", func() {
-		log.Println("Run models.CleanAllArticle...")
+	c.AddFunc("0 0 * * * *", func() {
+		log.Println("每小时运行一次")
+		logging.Info("每小时运行一次")
+		//models.CleanAllTag()
+	})
+	c.AddFunc("0 0 0 * * *", func() {
+		log.Println("每天午夜运行一次.")
+		logging.Info("每天午夜运行一次.")
 		//models.CleanAllArticle()
 	})
 

@@ -3,9 +3,9 @@ package model
 import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	//_ "github.com/mattn/go-oci8"
 	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
+	_ "github.com/mattn/go-oci8"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
