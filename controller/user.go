@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/zgltao/jerry/form"
@@ -68,5 +69,12 @@ func GetUsers(c *gin.Context) {
 		c.Error(erro.UserNotFound)
 		return
 	}
+
+	jsonBytes, err := json.Marshal(infos)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(jsonBytes))
+
 	c.JSON(http.StatusOK, infos)
 }

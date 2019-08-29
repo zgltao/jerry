@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
@@ -29,6 +28,32 @@ func setupDB(db *xorm.Engine) {
 	db.SetLogLevel(core.LOG_DEBUG)
 }
 
+func B2S(bs []uint8) string {
+	ba := []byte{}
+	for _, b := range bs {
+		ba = append(ba, byte(b))
+	}
+	return string(ba)
+}
+
+func SqlSelectFormat(results []map[string][]uint8) []map[string]string {
+	var resultsstr []map[string]string
+	//fmt.Printf("resultsstr type:%T\n", resultsstr)
+	for _, one := range results {
+		//fmt.Printf("one type:%T\n", one)
+		onestring := make(map[string]string)
+		for keeee, oneee := range one {
+			//fmt.Printf("oneee type:%T\n", oneee)
+			var oneeestr = B2S(oneee)
+			//fmt.Printf("oneee type:%T\n", oneeestr)
+			onestring[keeee] = oneeestr
+		}
+		resultsstr = append(resultsstr, onestring)
+		println(resultsstr)
+	}
+	return resultsstr
+}
+
 func GetBdcdjzmqk(c *gin.Context) {
 	var err error
 	engine := InitLocal()
@@ -43,13 +68,10 @@ func GetBdcdjzmqk(c *gin.Context) {
 
 	sql := "select * from DEPT"
 	results, err := engine.Query(sql)
-	for _, one := range results {
-		jsonStr, err := json.Marshal(one)
-		println(jsonStr)
-		if err != nil {
-			c.Error(err)
-		}
+	if err != nil {
+		c.Error(err)
 	}
-	c.JSON(http.StatusOK, results)
+	resultsstr := SqlSelectFormat(results)
+	c.JSON(http.StatusOK, resultsstr)
 	engine.Clone()
 }
