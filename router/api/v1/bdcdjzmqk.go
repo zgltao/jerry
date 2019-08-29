@@ -2,7 +2,6 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
 	"github.com/spf13/viper"
 	"log"
@@ -25,7 +24,8 @@ func openDB(oracle_config string) *xorm.Engine {
 	return engine
 }
 func setupDB(db *xorm.Engine) {
-	db.SetLogLevel(core.LOG_DEBUG)
+	//db.SetLogLevel(core.LOG_DEBUG)
+	db.SetLogLevel(1)
 }
 
 func B2S(bs []uint8) string {
